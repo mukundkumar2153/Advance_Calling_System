@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#080b14"/>
+<title>RingUp</title>
+<link rel="manifest" href="/manifest.json"/>
+<link rel="stylesheet" href="/css/main.css"/>
+<link rel="stylesheet" href="/css/incoming-call.css"/>
+<link rel="stylesheet" href="/css/settings.css"/>
+<style>
+body { background:#080b14; color:#e8eaf6; margin:0; font-family:sans-serif; }
+#boot {
+  position:fixed; inset:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:16px; z-index:9999;
+  background:#080b14;
+}
+.spin {
+  width:40px; height:40px; border-radius:50%;
+  border:3px solid #1e2840; border-top-color:#4f7aff;
+  animation:spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+#boot-error {
+  display:none;
+  background:#1a0a0f; border:1px solid #ff4f6a;
+  border-radius:12px; padding:16px 20px;
+  max-width:500px; width:90%;
+  color:#ff8096; font-size:12px;
+  font-family:monospace; white-space:pre-wrap;
+  word-break:break-all;
+}
+#boot-msg { color:#8892b0; font-size:14px; }
+</style>
+</head>
+<body>
+
+<div id="boot">
+  <div class="spin" id="boot-spin"></div>
+  <div id="boot-msg">Loading RingUp…</div>
+  <div id="boot-error"></div>
+</div>
+
+<!-- App screens -->
+<div id="screen-auth"     class="screen hidden"></div>
+<div id="screen-home"     class="screen hidden"></div>
+<div id="screen-settings" class="screen hidden"></div>
+<div id="screen-calling"  class="screen hidden"></div>
+<div id="screen-incoming" class="screen hidden"></div>
+<div id="screen-in-call"  class="screen hidden"></div>
+<div id="app-toast"></div>
+
+<!-- Catch all JS errors and show on screen -->
+<script>
+window.onerror = function(msg, src, line, col, err) {
+  const box = document.getElementById('boot-error');
+  const spin = document.getElementById('boot-spin');
+  const msgEl = document.getElementById('boot-msg');
+  if (box) {
+    box.style.display = 'block';
+    box.textContent += '❌ ' + msg + '\n' +
+      'File: ' + (src||'').replace(window.location.origin,'') + '\n' +
+      'Line: ' + line + '\n\n';
+  }
+  if (spin) spin.style.display = 'none';
+  if (msgEl) msgEl.textContent = '⚠️ Error — see details below';
+};
+
+window.onunhandledrejection = function(e) {
+  const box = document.getElementById('boot-error');
+  if (box) {
+    box.style.display = 'block';
+    box.textContent += '❌ Promise: ' + e.reason + '\n\n';
+  }
+};
+</script>
+
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script src="/js/socket.js"></script>
+<script src="/js/notifications.js"></script>
+<script src="/js/webrtc.js"></script>
+<script src="/js/settings.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/friends.js"></script>
+<script src="/js/call.js"></script>
+<script src="/js/incoming.js"></script>
+<script src="/js/app.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    // Apply saved theme first
+    if (window.Settings) {
+      Settings.initSettings();
+    }
+
+    setTimeout(() => {
+      const boot = document.getElementById('boot');
+      const errBox = document.getElementById('boot-error');
+
+      // Only hide boot if no errors
+      if (errBox && errBox.style.display === 'block') {
+        // Error shown — keep visible so user can read it
+        return;
+      }
+
+      if (window.App && window.App.init) {
+        if (boot) boot.remove();
+        App.init();
+      } else {
+        const box = document.getElementById('boot-error');
+        if (box) {
+          box.style.display = 'block';
+          box.textContent = '❌ window.App not found\nCheck app.js loaded correctly';
+        }
+        const spin = document.getElementById('boot-spin');
+        if (spin) spin.style.display = 'none';
+      }
+    }, 400);
+
+  } catch(e) {
+    const box = document.getElementById('boot-error');
+    if (box) {
+      box.style.display = 'block';
+      box.textContent = '❌ Boot error: ' + e.message;
+    }
+  }
+});
+</script>
+
+</body>
+</html>
