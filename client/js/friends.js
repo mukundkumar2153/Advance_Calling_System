@@ -471,9 +471,18 @@ function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;').replace(/"/g,'&quot;');
 }
 
-// Helper for conference invite picker — returns online friends
+// Helper for conference invite picker — returns online friends only
 function getOnlineFriends() {
   return _friends.filter(f => f.online);
+}
+
+// Returns ALL friends (online + offline) for invite pickers
+function getFriends() {
+  // Sort: online first, then alphabetical
+  return [..._friends].sort((a, b) => {
+    if (a.online !== b.online) return a.online ? -1 : 1;
+    return a.username.localeCompare(b.username);
+  });
 }
 
 window.FriendsUI = {
@@ -484,5 +493,5 @@ window.FriendsUI = {
   updateOnlineStatus, loadFriends,
   toggleFav, toggleFavCtx,
   showContextMenu, confirmRemove,
-  getOnlineFriends,
+  getOnlineFriends, getFriends,
 };

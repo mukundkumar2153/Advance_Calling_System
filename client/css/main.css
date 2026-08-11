@@ -772,4 +772,101 @@ html, body {
   .conf-peer-card { padding: 16px 8px; }
   .conf-peer-avatar { font-size: 36px; }
   .conf-controls { gap: 14px; padding-bottom: 20px; }
-}
+}
+
+/* ── Conference header left ───────────────────────────── */
+.conf-header-left {
+  display: flex; flex-direction: column; gap: 2px;
+}
+.conf-member-count {
+  font-size: 11px; color: var(--text2); font-weight: 500;
+}
+
+/* ── Conference peer status label ─────────────────────── */
+.conf-peer-status {
+  font-size: 10px; color: var(--text3); min-height: 14px;
+  text-align: center;
+}
+.conf-peer-card.calling {
+  border-color: var(--yellow);
+  box-shadow: 0 0 0 1px rgba(255,209,102,0.2);
+}
+.conf-peer-card.connecting {
+  border-color: var(--border2);
+  opacity: 0.8;
+}
+
+/* ── Conference empty state ───────────────────────────── */
+.conf-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text2);
+  font-size: 14px;
+  padding: 48px 20px;
+}
+
+/* ── Audio unlock note inside conference screen ──────── */
+.conf-audio-note {
+  display: flex; justify-content: center;
+  padding: 8px 20px;
+}
+.conf-audio-unlock-btn {
+  padding: 10px 24px; border-radius: 24px; border: none;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff; font-size: 14px; font-weight: 600;
+  cursor: pointer; font-family: inherit;
+  box-shadow: 0 4px 16px rgba(79,122,255,0.4);
+  animation: pulse-glow 1.8s ease-in-out infinite;
+}
+@keyframes pulse-glow {
+  0%,100% { box-shadow: 0 4px 16px rgba(79,122,255,0.4); }
+  50%      { box-shadow: 0 4px 28px rgba(79,122,255,0.7); }
+}
+
+/* ── Floating audio unlock button (autoplay blocked) ─── */
+.audio-unlock-btn {
+  position: fixed; bottom: 100px; left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 28px; border-radius: 28px; border: none;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff; font-size: 14px; font-weight: 700;
+  cursor: pointer; font-family: inherit; z-index: 999;
+  box-shadow: 0 6px 28px rgba(79,122,255,0.5);
+  animation: pulse-glow 1.8s ease-in-out infinite;
+  white-space: nowrap;
+}
+
+/* ── Invite modal — search bar ────────────────────────── */
+.conf-modal-search {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.conf-modal-search-input {
+  width: 100%; padding: 9px 14px;
+  background: var(--bg3); border: 1px solid var(--border2);
+  border-radius: 10px; color: var(--text); font-size: 13px;
+  font-family: inherit; outline: none;
+}
+.conf-modal-search-input::placeholder { color: var(--text3); }
+.conf-modal-search-input:focus { border-color: var(--accent); }
+
+/* ── Invite modal — info block & online/offline dots ─── */
+.conf-modal-info {
+  flex: 1; display: flex; flex-direction: column; gap: 2px;
+  min-width: 0;
+}
+.conf-modal-status {
+  font-size: 11px; color: var(--text2);
+  display: flex; align-items: center; gap: 4px;
+}
+.conf-online-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--green); flex-shrink: 0;
+  display: inline-block;
+}
+.conf-offline-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--text3); flex-shrink: 0;
+  display: inline-block;
+}
+
