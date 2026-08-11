@@ -98,6 +98,10 @@ function renderFriendsScreen() {
           <span class="bnav-icon">⭐</span>
           <span class="bnav-label">Favorites</span>
         </button>
+        <button class="bnav-item" id="bnav-group" onclick="window.ConferenceUI && ConferenceUI.startConference()">
+          <span class="bnav-icon">👥</span>
+          <span class="bnav-label">Group</span>
+        </button>
         <button class="bnav-item" id="bnav-settings" onclick="Settings.openSettings()">
           <span class="bnav-icon">⚙️</span>
           <span class="bnav-label">Settings</span>
@@ -467,6 +471,11 @@ function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;').replace(/"/g,'&quot;');
 }
 
+// Helper for conference invite picker — returns online friends
+function getOnlineFriends() {
+  return _friends.filter(f => f.online);
+}
+
 window.FriendsUI = {
   init, renderFriendsScreen, switchTab, switchMobileTab,
   onSearch, setFilter, toggleVoiceSearch,
@@ -475,4 +484,5 @@ window.FriendsUI = {
   updateOnlineStatus, loadFriends,
   toggleFav, toggleFavCtx,
   showContextMenu, confirmRemove,
+  getOnlineFriends,
 };

@@ -59,8 +59,13 @@ function showInProgressScreen(name, avatar, callId) {
         </div>
         <div class="ctrl-wrap">
           <button class="ctrl-circle" id="btn-speaker"
-                  onclick="CallHandler.toggleSpeaker()">🔊</button>
+                  onclick="CallHandler.toggleSpeaker()">🔈</button>
           <span class="ctrl-label">Speaker</span>
+        </div>
+        <div class="ctrl-wrap">
+          <button class="ctrl-circle" id="btn-conference"
+                  onclick="window.ConferenceUI && ConferenceUI.startFromActiveCall()">👥</button>
+          <span class="ctrl-label">Group</span>
         </div>
       </div>
     </div>`;
@@ -205,17 +210,14 @@ function toggleMute() {
   App.showToast(muted ? '🔇 Muted' : '🎙️ Unmuted');
 }
 
-function toggleSpeaker() {
-  const audio = document.getElementById('remote-audio');
-  if (audio) {
-    audio.muted = !audio.muted;
-    const btn = document.getElementById('btn-speaker');
-    if (btn) {
-      btn.textContent = audio.muted ? '🔈' : '🔊';
-      btn.classList.toggle('ctrl-active', audio.muted);
-    }
-    App.showToast(audio.muted ? '🔇 Speaker off' : '🔊 Speaker on');
+async function toggleSpeaker() {
+  const speakerOn = await WebRTC.toggleSpeaker();
+  const btn = document.getElementById('btn-speaker');
+  if (btn) {
+    btn.textContent = speakerOn ? '🔊' : '🔈';
+    btn.classList.toggle('ctrl-active', speakerOn);
   }
+  App.showToast(speakerOn ? '🔊 Loudspeaker ON' : '🔈 Earpiece mode');
 }
 
 function cancelCall() {

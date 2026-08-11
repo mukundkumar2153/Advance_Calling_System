@@ -42,6 +42,8 @@ async function afterLogin(token, user) {
   SocketClient.initSocket(token);
   bindSocketEvents();
 
+  if (window.ConferenceUI) ConferenceUI.initConference(user);
+
   showScreen('screen-home');
   FriendsUI.renderFriendsScreen();
 
@@ -89,6 +91,21 @@ function bindSocketEvents() {
   socket.on('disconnect',    () => App.showToast('⚠️ Connection lost — reconnecting…'));
   socket.on('reconnect',     () => App.showToast('✅ Reconnected!'));
   socket.on('user-status', ({ userId, online }) => FriendsUI.updateOnlineStatus(userId, online));
+
+  // ── Conference events ───────────────────────────────
+  if (window.ConferenceUI) {
+    socket.on('conf-created',       data => ConferenceUI.onConfCreated(data));
+    socket.on('conf-joined',        data => ConferenceUI.onConfJoined(data));
+    socket.on('conf-peer-joined',   data => ConferenceUI.onConfPeerJoined(data));
+    socket.on('conf-peer-left',     data => ConferenceUI.onConfPeerLeft(data));
+    socket.on('conf-ended',         data => ConferenceUI.onConfEnded(data));
+    socket.on('conf-peer-muted',    data => ConferenceUI.onConfPeerMuted(data));
+    socket.on('conf-invite',        data => ConferenceUI.showConferenceInvite(data));
+    // Conference WebRTC signaling
+    socket.on('conf-offer',  async data => { try { await WebRTC.handleConfOffer(data); } catch(e) { console.error('[Conf] handleConfOffer:', e); } });
+    socket.on('conf-answer', async data => { try { await WebRTC.handleConfAnswer(data); } catch(e) { console.error('[Conf] handleConfAnswer:', e); } });
+    socket.on('conf-ice',    async data => { try { await WebRTC.handleConfIce(data); } catch(e) {} });
+  }
 }
 
 function showScreen(id) {

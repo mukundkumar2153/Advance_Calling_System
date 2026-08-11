@@ -43,12 +43,13 @@ body { background:#080b14; color:#e8eaf6; margin:0; font-family:sans-serif; }
 </div>
 
 <!-- App screens -->
-<div id="screen-auth"     class="screen hidden"></div>
-<div id="screen-home"     class="screen hidden"></div>
-<div id="screen-settings" class="screen hidden"></div>
-<div id="screen-calling"  class="screen hidden"></div>
-<div id="screen-incoming" class="screen hidden"></div>
-<div id="screen-in-call"  class="screen hidden"></div>
+<div id="screen-auth"       class="screen hidden"></div>
+<div id="screen-home"       class="screen hidden"></div>
+<div id="screen-settings"   class="screen hidden"></div>
+<div id="screen-calling"    class="screen hidden"></div>
+<div id="screen-incoming"   class="screen hidden"></div>
+<div id="screen-in-call"    class="screen hidden"></div>
+<div id="screen-conference" class="screen hidden"></div>
 <div id="app-toast"></div>
 
 <!-- Catch all JS errors and show on screen -->
@@ -80,6 +81,7 @@ window.onunhandledrejection = function(e) {
 <script src="/js/socket.js"></script>
 <script src="/js/notifications.js"></script>
 <script src="/js/webrtc.js"></script>
+<script src="/js/conference.js"></script>
 <script src="/js/settings.js"></script>
 <script src="/js/auth.js"></script>
 <script src="/js/friends.js"></script>

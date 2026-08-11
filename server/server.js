@@ -32,6 +32,32 @@ async function main() {
   app.use('/api/users',   usersRoutes);
   app.use('/api/friends', friendsRoutes);
   app.get('/api/ping', (_, res) => res.json({ ok: true }));
+
+  // ICE servers endpoint — returns TURN + STUN for NAT traversal (long-distance calling)
+  app.get('/api/ice-servers', (_, res) => {
+    res.json({
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: 'stun:stun1.l.google.com:19302' },
+        // Free public TURN servers — relay traffic when STUN fails (different networks/mobile data)
+        {
+          urls: [
+            'turn:openrelay.metered.ca:80',
+            'turn:openrelay.metered.ca:443',
+            'turn:openrelay.metered.ca:443?transport=tcp',
+          ],
+          username:   'openrelayproject',
+          credential: 'openrelayproject',
+        },
+        {
+          urls: 'turn:relay1.expressturn.com:3478',
+          username:   'efYSB0SXK0GLCMUDOL',
+          credential: 'eSbxQkSUwdv2THBT',
+        },
+      ],
+    });
+  });
+
   app.get('*', (_, res) =>
     res.sendFile(path.join(__dirname, '..', 'client', 'index.html'))
   );

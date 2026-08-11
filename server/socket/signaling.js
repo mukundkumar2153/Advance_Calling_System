@@ -61,6 +61,29 @@ function registerSignaling(io) {
       if (t) io.to(t).emit('peer-muted', { muted });
     });
 
+    // ── Conference WebRTC signaling relay ─────────────────
+    // Each event forwards to specific target peer within conference room
+    socket.on('conf-offer', ({ roomId, offer, targetId }) => {
+      const t = userSockets[targetId];
+      if (t) io.to(t).emit('conf-offer', { roomId, offer, fromId: userId });
+    });
+
+    socket.on('conf-answer', ({ roomId, answer, targetId }) => {
+      const t = userSockets[targetId];
+      if (t) io.to(t).emit('conf-answer', { roomId, answer, fromId: userId });
+    });
+
+    socket.on('conf-ice', ({ roomId, candidate, targetId }) => {
+      const t = userSockets[targetId];
+      if (t) io.to(t).emit('conf-ice', { roomId, candidate, fromId: userId });
+    });
+
+    socket.on('conf-mute', ({ roomId, muted }) => {
+      // Broadcast mute state to all members in the room via conf-peer-muted
+      // We don't have room lookup here, so broadcast to all connected — client filters by roomId
+      socket.broadcast.emit('conf-peer-muted', { roomId, userId, muted });
+    });
+
     registerCallEvents(io, socket);
 
     socket.on('disconnect', async (reason) => {
