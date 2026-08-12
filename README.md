@@ -92,4 +92,3 @@ Open your browser and navigate to `http://localhost:3000`. You can open multiple
 ## 🔗 Project Links
 
 - 🌐 **Live Application**: [https://advance-calling-system.vercel.app/](https://advance-calling-system.vercel.app/)
-- 📦 **GitHub Repository**: [https://github.com/mukundkumar2153/Advance_Calling_System](https://github.com/mukundkumar2153/Advance_Calling_System)
